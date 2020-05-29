@@ -1,0 +1,112 @@
+package com.dell.LinkedList;
+
+import com.dell.nodes.*;
+	
+public class LinkedList<T> {
+	LinkedListNode<T> head;
+	LinkedListNode<T> last;
+	private int size;
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		LinkedListNode<T> temp = head;
+		sb.append("[");
+		while(temp!=null) {
+			sb.append(temp.getData());
+			if(temp.getNext()!=null)
+				sb.append(",");
+			temp = temp.getNext();
+		}
+		sb.append("]");
+		return sb.toString();
+	}
+	public String toStringReverse() {
+		StringBuilder sb = new StringBuilder();
+		LinkedListNode<T> temp = last;
+		sb.append("[");
+		while(temp!=null) {
+			sb.append(temp.getData());
+			if(temp.getPrevious()!=null)
+				sb.append(",");
+			temp = temp.getPrevious();
+		}
+		sb.append("]");
+		return sb.toString();
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void add(T data) {
+		LinkedListNode<T> node = new LinkedListNode<T>(data);
+		if(null==head) {
+			head = node;
+			last = node;
+		}else {
+			last.setNext(node);
+			node.setPrevious(last);
+			last = node;
+		}
+		size++;
+ 	}
+	public T getIndex(int getIndex) {
+		LinkedListNode<T> node = head;
+		if (getIndex > size-1 || getIndex < 0) {
+			throw new IllegalArgumentException("index is not valid");
+		}else {
+			
+			int index = 0;
+			while((node != null && index != getIndex)) {
+				if (index == getIndex)
+					break;
+				node = node.getNext();
+				index++;
+			}
+		}
+		return node.getData();
+	}
+/*
+ * Delete is going to delete only the first accurance of the element 
+ */
+	public void delete(T data) {
+		LinkedListNode<T> node = head;
+		while(node!=null) {
+			if(node.getData()==data) {
+				if(node.getData()==head.getData()) {
+					head = head.getNext();
+					head.getNext().setPrevious(null);
+				}
+				LinkedListNode<T> prev = node.getPrevious();
+				prev.setNext(node.getNext());
+				if(node.getNext()!=null) { 
+					node.getNext().setPrevious(prev);
+				}else {
+					modifyLast();
+				}
+			}
+			node = node.getNext();
+		}
+	}
+	
+	private void modifyLast() {
+		LinkedListNode<T> node = head;
+		while(node.getNext()!=null) {
+			node = node.getNext();
+		}
+		last = node;
+	}
+}
+class TestLinkedList{
+	public static void main(String[] args) {
+		LinkedList<Integer> l = new LinkedList<Integer>();
+		for(int i = 1;i<=10;i++) {
+			l.add(i);
+		}
+		System.out.println(l.getIndex(1));
+		l.delete(2);
+		System.out.println(l);
+		System.out.println(l.toStringReverse());
+		
+	}
+}
