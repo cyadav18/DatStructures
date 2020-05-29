@@ -160,14 +160,13 @@ public class LinkedList<T> {
 				if(node.getNext()!=null) {
 					node.getNext().setPrevious(prev);
 				}else {
-					modifyLast();
+					last = node;
 				}
 			}
 			size--;
 		}
 	}
 		
-	
 	private void modifyLast() {
 		LinkedListNode<T> node = head;
 		while(node.getNext()!=null) {
@@ -176,26 +175,130 @@ public class LinkedList<T> {
 		last = node;
 	}
 	
+	public void reverse() {
+		reverseList(head);
+	}
+	private void reverseList(LinkedListNode<T> head) {
+		if(head.getNext() == null) {
+			this.head = head;
+			LinkedListNode<T>prev = head.getPrevious();
+			head.setPrevious(null);
+			head.setNext(prev);
+		}
+		else {
+			reverseList(head.getNext());
+			LinkedListNode<T> next = head.getNext();
+			LinkedListNode<T> prev = head.getPrevious();
+			head.setNext(prev);
+			if(prev == null) {
+				last = head;
+			}
+			head.setPrevious(next);
+		}
+	}
+	
+	public void reverseUpTo(int reverseIndex) {
+		if (reverseIndex > size-1 || reverseIndex < 1) {
+			throw new IllegalArgumentException("index is not valid for reversing upto");
+		}else {
+			reverseUpTo(head,reverseIndex,0);
+		}
+	}
+	private void reverseUpTo(LinkedListNode<T> head, int reverseIndex,int fromIndex) {
+		if(fromIndex == reverseIndex || head.getNext() == null) {
+			this.head = head;
+			LinkedListNode<T> prev = head.getPrevious();
+			LinkedListNode<T> next = head.getNext();
+			head.setNext(prev);
+			head.setPrevious(next);
+		}
+		else {
+			reverseUpTo(head.getNext(),reverseIndex,++fromIndex);
+			LinkedListNode<T> prev = head.getPrevious();
+			LinkedListNode<T> next = head.getNext();
+			if(prev == null) {
+				LinkedListNode<T> point = this.head.getPrevious();
+				head.setNext(point);
+				this.head.setPrevious(null);
+				if(point!=null) {
+					point.setPrevious(head);
+				}else {
+					this.last = head;
+				}
+			}else {
+				head.setNext(prev);
+			}
+			head.setPrevious(next);
+		}
+	}
+	
+	public void reverseFromIndex(int reverseIndex) {
+		if (reverseIndex > size-2 || reverseIndex < 0) {
+			throw new IllegalArgumentException("index is not valid for reversing from");
+		}else {
+			LinkedListNode<T> from = null;
+			LinkedListNode<T> node = head;
+			int index = 0;
+			while(node != null && index != reverseIndex) {
+				from = node;
+				node = node.getNext();
+				index++;
+			}
+			reverseFromIndex(node,from);
+		}
+	}
+	private void reverseFromIndex(LinkedListNode<T> head,LinkedListNode<T> from) {
+		if(head.getNext() == null) {
+			if(from!=null)
+				from.setNext(head);
+			else {
+				this.head = head;
+			}
+			LinkedListNode<T> prev = head.getPrevious();
+			head.setPrevious(from);
+			head.setNext(prev);
+		}
+		else {
+			reverseFromIndex(head.getNext(),from);
+			LinkedListNode<T> next = head.getNext();
+			LinkedListNode<T> prev = head.getPrevious();
+			if(prev == null || prev.equals(from)) {
+				head.setNext(null);
+				last = head;
+				
+			}else {
+				head.setNext(prev);
+			}
+			head.setPrevious(next);
+		}
+	}
 }
 class TestLinkedList{
 	public static void main(String[] args) {
 		LinkedList<Integer> l = new LinkedList<Integer>();
-		for(int i = 1;i<=2;i++) {
+		for(int i = 1;i<=10;i++) {
 			l.add(i);
 		}
 		System.out.println(l.getIndex(l.getSize()-1));
-//		l.delete(10);
+		l.addAtIndex(0, 0);
 		System.out.println(l);
 		System.out.println(l.toStringReverse());
-		System.out.println();
-		l.deleteAtIndex(0);
-		System.out.println(l);
-		System.out.println(l.toStringReverse());
-		System.out.println();
-		l.addAtIndex(1,0);
-		System.out.println(l);
-		System.out.println(l.toStringReverse());
-
-		
+//		System.out.println();
+//		l.deleteAtIndex(0);
+//		System.out.println(l);
+//		System.out.println(l.toStringReverse());
+//		System.out.println();
+//		l.addAtIndex(1,0);
+//		System.out.println(l);
+//		System.out.println(l.toStringReverse());
+//		System.out.println();
+//		l.reverse();
+//		System.out.println(l);
+//		System.out.println(l.toStringReverse());
+//		l.reverseUpTo(4);
+//		l.reverseFromIndex(4);
+//		System.out.println();
+//		System.out.println(l);
+//		System.out.println(l.toStringReverse());
 	}
 }
