@@ -272,15 +272,58 @@ public class LinkedList<T> {
 			head.setPrevious(next);
 		}
 	}
+	
+	public void reversePairWise(int reverser) {
+		reverseKthWise(head,reverser);
+	}
+	
+	private void reverseKthWise(LinkedListNode<T> head,int reverser) {
+		if(head == null || reverser == 1)
+			return;
+		int count = 1;
+		LinkedListNode<T> node = head;
+		LinkedListNode<T> next = null;
+		LinkedListNode<T> prev = null;
+		LinkedListNode<T> start = node;
+		while(node!=null && count<=reverser) {
+			next = node.getNext();
+			prev = node.getPrevious();
+			node.setNext(prev);
+			node.setPrevious(next);
+			if(count != reverser && next != null)
+				node = next;
+			else 
+				count = reverser+1;
+			count++;
+		}
+		if(start.getNext()==null) {
+			this.head = node;
+			node.setPrevious(null);
+		}else {
+			LinkedListNode<T> temp = start.getNext();
+			node.setPrevious(temp);
+			temp.setNext(node);
+		}
+		start.setNext(next);
+		if(next!=null) {
+			next.setPrevious(start);
+		}
+		else {
+			last = start;
+			start.setNext(null);
+		}
+		reverseKthWise(next,reverser);
+	}
 }
 class TestLinkedList{
 	public static void main(String[] args) {
 		LinkedList<Integer> l = new LinkedList<Integer>();
-		for(int i = 1;i<=10;i++) {
+		for(int i = 1;i<=15;i++) {
 			l.add(i);
 		}
 		System.out.println(l.getIndex(l.getSize()-1));
-		l.addAtIndex(0, 0);
+//		l.addAtIndex(0, 0);
+		l.reversePairWise(3);
 		System.out.println(l);
 		System.out.println(l.toStringReverse());
 //		System.out.println();
