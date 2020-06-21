@@ -69,8 +69,7 @@ public class LinkedList<T> {
 			if(prev!=null) {
 				prev.setNext(dataNode);
 				dataNode.setPrevious(prev);
-			}
-			else {
+			}else {
 				dataNode.setNext(this.head);
 				if(this.head!=null) {
 					this.head.setPrevious(dataNode);
@@ -82,7 +81,7 @@ public class LinkedList<T> {
 				next.setPrevious(dataNode);
 			}
 			else {
-				modifyLast();
+				last = dataNode;
 			}
 		}
 	}
@@ -104,7 +103,7 @@ public class LinkedList<T> {
 		return node.getData();
 	}
 /*
- * Delete is going to delete only the first accurance of the element 
+ * Delete is going to delete only the first occurrence of the element 
  */
 	public void delete(T data) {
 		LinkedListNode<T> node = head;
@@ -125,8 +124,8 @@ public class LinkedList<T> {
 					prev.setNext(node.getNext());
 					if(node.getNext()!=null) { 
 						node.getNext().setPrevious(prev);
-					}else { // since last will be modified
-						modifyLast();
+					}else { 
+						last = prev;
 					}
 				}
 				size--;
@@ -160,20 +159,13 @@ public class LinkedList<T> {
 				if(node.getNext()!=null) {
 					node.getNext().setPrevious(prev);
 				}else {
-					last = node;
+					last = prev;
 				}
 			}
 			size--;
 		}
 	}
 		
-	private void modifyLast() {
-		LinkedListNode<T> node = head;
-		while(node.getNext()!=null) {
-			node = node.getNext();
-		}
-		last = node;
-	}
 	
 	public void reverse() {
 		reverseList(head);
@@ -318,18 +310,18 @@ public class LinkedList<T> {
 class TestLinkedList{
 	public static void main(String[] args) {
 		LinkedList<Integer> l = new LinkedList<Integer>();
-		for(int i = 1;i<=15;i++) {
+		for(int i = 1;i<=10;i++) {
 			l.add(i);
 		}
 		System.out.println(l.getIndex(l.getSize()-1));
 //		l.addAtIndex(0, 0);
-		l.reversePairWise(3);
-		System.out.println(l);
-		System.out.println(l.toStringReverse());
-//		System.out.println();
-//		l.deleteAtIndex(0);
+//		l.reversePairWise(3);
 //		System.out.println(l);
 //		System.out.println(l.toStringReverse());
+//		System.out.println();
+		l.deleteAtIndex(9);;
+		System.out.println(l);
+		System.out.println(l.toStringReverse());
 //		System.out.println();
 //		l.addAtIndex(1,0);
 //		System.out.println(l);
